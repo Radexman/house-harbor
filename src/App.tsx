@@ -4,11 +4,15 @@ import Offers from './pages/Offers/Offers';
 import SignIn from './pages/SignIn/SignIn';
 import SignUp from './pages/SignUp/SignUp';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
+import Navbar from './components/layout/Navbar/Navbar';
+import ScrollToTop from './components/ScrollToTop';
 import NotFound from './pages/NotFound/NotFound';
 
 function App() {
   return (
     <div className="min-h-screen bg-neutral">
+      <ScrollToTop />
+      <Navbar />
       <Routes>
         <Route path="/" element={<Explore />} />
         <Route path="/offers" element={<Offers />} />
