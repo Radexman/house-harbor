@@ -1,5 +1,5 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import Heading from './components/Heading';
+import Heading from './components/layout/Heading';
 
 function App() {
   return (

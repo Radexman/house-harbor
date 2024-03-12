@@ -1,7 +1,7 @@
 function Heading() {
   return (
     <div>
-      <h1>App Template</h1>
+      <h1>House Harbor</h1>
     </div>
   );
 }
