@@ -1,14 +1,9 @@
+import { useContext } from 'react';
+import AppContext from '../../../context/AppContext';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 
 function Navbar() {
-  const [theme, setTheme] = useState(localStorage.getItem('theme') ? localStorage.getItem('theme')! : 'dark');
-
-  useEffect(() => {
-    localStorage.setItem('theme', theme);
-    const localTheme = localStorage.getItem('theme');
-    document.querySelector('html')?.setAttribute('data-theme', localTheme);
-  });
+  const { theme, changeTheme } = useContext(AppContext);
 
   return (
     <nav className="navbar bg-base-100">
@@ -28,10 +23,7 @@ function Navbar() {
           <li>
             <Link to="/profile">Profile</Link>
           </li>
-          <label
-            onChange={() => setTheme(theme === 'cupcake' ? 'dark' : 'cupcake')}
-            className="grid cursor-pointer place-items-center"
-          >
+          <button type="button" onChange={() => changeTheme()} className="grid cursor-pointer place-items-center">
             <input
               type="checkbox"
               value={theme}
@@ -66,7 +58,7 @@ function Navbar() {
             >
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
-          </label>
+          </button>
         </ul>
       </div>
     </nav>
