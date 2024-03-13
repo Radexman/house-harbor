@@ -1,5 +1,8 @@
-import { useState, ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, ChangeEvent, FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { db } from '../../firebase.config';
+import { firebaseApp } from '../../firebase.config';
 import { FaEye as VisibleIcon, FaKey as KeyIcon, FaUserEdit as NameIcon } from 'react-icons/fa';
 import { IoMdMail as MailIcon, IoMdCreate as CreateIcon } from 'react-icons/io';
 import { SignUpFormTypes } from '../../types/Form.types';
@@ -12,6 +15,8 @@ function SignUp() {
     password: '',
   });
 
+  const navigate = useNavigate();
+
   const { name, email, password } = formData;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -21,13 +26,32 @@ function SignUp() {
     }));
   };
 
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const auth = getAuth(firebaseApp);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      const { user } = userCredential.user;
+
+      updateProfile(auth.currentUser!, {
+        displayName: name,
+      });
+
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <header>
         <p className="text-center text-4xl md:text-left">Create Account</p>
       </header>
       <main>
-        <form className="mx-auto max-w-md md:mx-0">
+        <form onSubmit={handleSubmit} className="mx-auto max-w-md md:mx-0">
           <div className="mt-6 flex flex-col space-y-3">
             <label htmlFor="email" className="input input-bordered flex items-center gap-2">
               <MailIcon />
@@ -59,7 +83,7 @@ function SignUp() {
               </button>
             </label>
             <div className="flex justify-between">
-              <button type="button" className="btn btn-primary ">
+              <button type="submit" className="btn btn-primary ">
                 Create New Account
                 <CreateIcon />
               </button>
@@ -68,7 +92,7 @@ function SignUp() {
         </form>
         <div className="mx-auto mt-16 max-w-md text-center text-sm md:mx-0 md:text-left">
           <p>Already have an account?</p>
-          <Link to="/sign-in">
+          <Link to="/">
             <button type="submit" className="underline duration-150 hover:text-primary">
               Login
             </button>
