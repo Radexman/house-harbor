@@ -1,6 +1,6 @@
 function Explore() {
   return (
-    <div>
+    <div className="container mx-auto">
       <h1>Explore</h1>
     </div>
   );

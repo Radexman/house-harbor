@@ -8,6 +8,7 @@ import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import Navbar from './components/layout/Navbar/Navbar';
 import ScrollToTop from './components/ScrollToTop';
 import NotFound from './pages/NotFound/NotFound';
+import MobileNavbar from './components/layout/MobileNavbar/MobileNavbar';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+      <MobileNavbar />
     </AppContextProvider>
   );
 }
