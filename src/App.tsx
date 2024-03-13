@@ -13,7 +13,7 @@ import MobileNavbar from './components/layout/MobileNavbar/MobileNavbar';
 function App() {
   return (
     <AppContextProvider>
-      <div className="min-h-screen bg-neutral">
+      <div className="min-h-screen">
         <ScrollToTop />
         <Navbar />
         <Routes>

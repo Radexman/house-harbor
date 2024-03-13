@@ -1,7 +1,7 @@
 function Explore() {
   return (
     <div className="container mx-auto">
-      <h1>Explore</h1>
+      <h1 className="text-4xl font-bold">Explore</h1>
     </div>
   );
 }

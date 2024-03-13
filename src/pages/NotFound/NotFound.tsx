@@ -1,7 +1,7 @@
 function NotFound() {
   return (
-    <div>
-      <h1>Not Found</h1>
+    <div className="container mx-auto">
+      <h1 className="text-4xl font-bold">Not Found</h1>
     </div>
   );
 }

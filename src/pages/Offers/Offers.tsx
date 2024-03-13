@@ -1,7 +1,7 @@
 function Offers() {
   return (
-    <div>
-      <h1>Offers</h1>
+    <div className="container mx-auto">
+      <h1 className="text-4xl font-bold">Offers</h1>
     </div>
   );
 }

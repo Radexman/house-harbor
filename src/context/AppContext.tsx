@@ -13,7 +13,7 @@ export function AppContextProvider({ children }: ContextProviderProps) {
   }, [theme]);
 
   const changeTheme = () => {
-    setTheme(theme === 'cupcake' ? 'dark' : 'cupcake');
+    setTheme(theme === 'winter' ? 'dark' : 'winter');
   };
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values

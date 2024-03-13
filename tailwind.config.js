@@ -12,6 +12,6 @@ module.exports = {
   // eslint-disable-next-line global-require
   plugins: [require('daisyui')],
   daisyui: {
-    themes: ['cupcake', 'dark'],
+    themes: ['winter', 'dark'],
   },
 };
