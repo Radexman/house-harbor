@@ -1,11 +1,11 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
+import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { db } from '../../firebase.config';
-import { firebaseApp } from '../../firebase.config';
 import { FaEye as VisibleIcon, FaKey as KeyIcon, FaUserEdit as NameIcon } from 'react-icons/fa';
 import { IoMdMail as MailIcon, IoMdCreate as CreateIcon } from 'react-icons/io';
 import { SignUpFormTypes } from '../../types/Form.types';
+import db, { firebaseApp } from '../../firebase.config';
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,11 +33,18 @@ function SignUp() {
       const auth = getAuth(firebaseApp);
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-      const { user } = userCredential.user;
+      // eslint-disable-next-line prefer-destructuring
+      const user = userCredential.user;
 
       updateProfile(auth.currentUser!, {
         displayName: name,
       });
+
+      const formDataCopy = { ...formData };
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
+
+      await setDoc(doc(db, 'users', user.uid), formDataCopy);
 
       navigate('/');
     } catch (error) {
@@ -92,7 +99,7 @@ function SignUp() {
         </form>
         <div className="mx-auto mt-16 max-w-md text-center text-sm md:mx-0 md:text-left">
           <p>Already have an account?</p>
-          <Link to="/">
+          <Link to="/sign-in">
             <button type="submit" className="underline duration-150 hover:text-primary">
               Login
             </button>

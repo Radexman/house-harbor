@@ -1,9 +1,11 @@
-import { useState, ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, ChangeEvent, FormEvent } from 'react';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowRightLong as ArrowRightIcon } from 'react-icons/fa6';
 import { FaEye as VisibleIcon, FaKey as KeyIcon } from 'react-icons/fa';
 import { IoMdMail as MailIcon } from 'react-icons/io';
 import { SignInFormTypes } from '../../types/Form.types';
+import { firebaseApp } from '../../firebase.config';
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,6 +13,8 @@ function SignIn() {
     email: '',
     password: '',
   });
+
+  const navigate = useNavigate();
 
   const { email, password } = formData;
 
@@ -21,13 +25,29 @@ function SignIn() {
     }));
   };
 
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const auth = getAuth(firebaseApp);
+
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+      if (userCredential.user) {
+        navigate('/');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto max-h-screen p-4">
       <header>
-        <p className="text-center text-4xl md:text-left">Welcome Back</p>
+        <p className="text-center text-4xl md:text-left">Login</p>
       </header>
       <main>
-        <form className="mx-auto max-w-md md:mx-0">
+        <form onSubmit={handleSubmit} className="mx-auto max-w-md md:mx-0">
           <div className="mt-6 flex flex-col space-y-3">
             <label htmlFor="email" className="input input-bordered flex items-center gap-2">
               <MailIcon />
@@ -55,7 +75,7 @@ function SignIn() {
               </button>
             </label>
             <div className="flex justify-between">
-              <button type="button" className="btn btn-primary w-40">
+              <button type="submit" className="btn btn-primary w-40">
                 Sign in
                 <ArrowRightIcon />
               </button>

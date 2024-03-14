@@ -1,3 +1,5 @@
+import { FieldValue } from 'firebase/firestore';
+
 export interface SignInFormTypes {
   email: string;
   password: string;
@@ -6,5 +8,6 @@ export interface SignInFormTypes {
 export interface SignUpFormTypes {
   name: string;
   email: string;
-  password: string;
+  password?: string | undefined;
+  timestamp?: FieldValue;
 }
