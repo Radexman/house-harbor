@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { AppContextProvider } from './context/AppContext';
 import Explore from './pages/Explore/Explore';
 import Offers from './pages/Offers/Offers';
@@ -35,9 +37,12 @@ function App() {
 
 export function WrappedApp() {
   return (
-    <Router>
-      <App />
-    </Router>
+    <>
+      <Router>
+        <App />
+      </Router>
+      <ToastContainer position="bottom-left" />
+    </>
   );
 }
 

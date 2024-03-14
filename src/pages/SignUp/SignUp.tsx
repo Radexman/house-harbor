@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
+import { toast } from 'react-toastify';
 import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -31,6 +32,10 @@ function SignUp() {
 
     try {
       const auth = getAuth(firebaseApp);
+
+      if (password === undefined) {
+        throw new Error('Password is undefined');
+      }
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
       // eslint-disable-next-line prefer-destructuring
@@ -48,7 +53,7 @@ function SignUp() {
 
       navigate('/');
     } catch (error) {
-      console.log(error);
+      toast.error('Something Went Wrong With Registration');
     }
   };
 

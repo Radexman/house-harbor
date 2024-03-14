@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
+import { toast } from 'react-toastify';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowRightLong as ArrowRightIcon } from 'react-icons/fa6';
@@ -31,13 +32,17 @@ function SignIn() {
     try {
       const auth = getAuth(firebaseApp);
 
+      if (password === undefined) {
+        throw new Error('Password is undefined');
+      }
+
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
       if (userCredential.user) {
         navigate('/');
       }
     } catch (error) {
-      console.log(error);
+      toast.error('Bad User Credentials');
     }
   };
 
