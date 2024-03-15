@@ -3,10 +3,17 @@ import { toast } from 'react-toastify';
 import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { FaEye as VisibleIcon, FaKey as KeyIcon, FaUserEdit as NameIcon } from 'react-icons/fa';
+import {
+  FaEye as VisibleIcon,
+  FaKey as KeyIcon,
+  FaUserEdit as NameIcon,
+  FaEyeSlash as NonVisibleIcon,
+} from 'react-icons/fa';
 import { IoMdMail as MailIcon, IoMdCreate as CreateIcon } from 'react-icons/io';
 import { SignUpFormTypes } from '../../types/Form.types';
 import db, { firebaseApp } from '../../firebase.config';
+
+import OAuth from '../../components/OAuth';
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -91,7 +98,7 @@ function SignUp() {
                 onChange={handleChange}
               />
               <button type="button" onClick={() => setShowPassword((prevState) => !prevState)}>
-                <VisibleIcon />
+                {showPassword ? <NonVisibleIcon /> : <VisibleIcon />}
               </button>
             </label>
             <div className="flex justify-between">
@@ -102,7 +109,8 @@ function SignUp() {
             </div>
           </div>
         </form>
-        <div className="mx-auto mt-16 max-w-md text-center text-sm md:mx-0 md:text-left">
+        <OAuth />
+        <div className="mx-auto mt-8 max-w-md text-center text-sm md:mx-0 md:text-left">
           <p>Already have an account?</p>
           <Link to="/sign-in">
             <button type="submit" className="underline duration-150 hover:text-primary">
@@ -110,7 +118,6 @@ function SignUp() {
             </button>
           </Link>
         </div>
-        {/* Google OAuth */}
       </main>
     </div>
   );

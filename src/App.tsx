@@ -17,22 +17,20 @@ import PrivateRoute from './components/PrivateRoute';
 function App() {
   return (
     <AppContextProvider>
-      <div className="min-h-screen">
-        <ScrollToTop />
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Explore />} />
-          <Route path="/offers" element={<Offers />} />
-          <Route path="/profile" element={<PrivateRoute />}>
-            <Route path="/profile" element={<Profile />} />
-          </Route>
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/notfound" element={<NotFound />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
+      <ScrollToTop />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Explore />} />
+        <Route path="/offers" element={<Offers />} />
+        <Route path="/profile" element={<PrivateRoute />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/notfound" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
       <MobileNavbar />
     </AppContextProvider>
   );

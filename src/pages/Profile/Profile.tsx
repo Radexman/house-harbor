@@ -86,7 +86,7 @@ function Profile() {
         </div>
       </header>
       <main className="mt-12">
-        <div className="rounded-md bg-primary-content p-2">
+        <div className="rounded-md border-[1px] p-2">
           <p>Name: {name}</p>
           <p>Email: {email}</p>
         </div>

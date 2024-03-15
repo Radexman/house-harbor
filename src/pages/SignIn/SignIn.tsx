@@ -3,10 +3,11 @@ import { toast } from 'react-toastify';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowRightLong as ArrowRightIcon } from 'react-icons/fa6';
-import { FaEye as VisibleIcon, FaKey as KeyIcon } from 'react-icons/fa';
+import { FaEye as VisibleIcon, FaKey as KeyIcon, FaEyeSlash as NonVisibleIcon } from 'react-icons/fa';
 import { IoMdMail as MailIcon } from 'react-icons/io';
 import { SignInFormTypes } from '../../types/Form.types';
 import { firebaseApp } from '../../firebase.config';
+import OAuth from '../../components/OAuth';
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -44,9 +45,9 @@ function SignIn() {
   };
 
   return (
-    <div className="container mx-auto max-h-screen p-4">
+    <div className="container mx-auto p-4">
       <header>
-        <p className="text-center text-4xl md:text-left">Login</p>
+        <h1 className="text-center text-4xl font-semibold md:text-left">Login</h1>
       </header>
       <main>
         <form onSubmit={handleSubmit} className="mx-auto max-w-md md:mx-0">
@@ -73,7 +74,7 @@ function SignIn() {
                 onChange={handleChange}
               />
               <button type="button" onClick={() => setShowPassword((prevState) => !prevState)}>
-                <VisibleIcon />
+                {showPassword ? <NonVisibleIcon /> : <VisibleIcon />}
               </button>
             </label>
             <div className="flex justify-between">
@@ -87,6 +88,7 @@ function SignIn() {
             </div>
           </div>
         </form>
+        <OAuth />
         <div className="mx-auto mt-16 max-w-md text-center text-sm md:mx-0 md:text-left">
           <p>Don&apos;t have an account yet? Create one for free.</p>
           <Link to="/sign-up">
@@ -95,7 +97,6 @@ function SignIn() {
             </button>
           </Link>
         </div>
-        {/* Google OAuth */}
       </main>
     </div>
   );
