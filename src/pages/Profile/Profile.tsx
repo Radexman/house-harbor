@@ -88,7 +88,7 @@ function Profile() {
       <main className="mt-12">
         <div className="rounded-md bg-primary-content p-2">
           <p>Name: {name}</p>
-          <p>Emaill: {email}</p>
+          <p>Email: {email}</p>
         </div>
         <div className="mt-8 flex items-center justify-between">
           <p>Change Personal Data</p>

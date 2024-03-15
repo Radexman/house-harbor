@@ -60,7 +60,7 @@ function SignUp() {
   return (
     <div className="container mx-auto p-4">
       <header>
-        <h1 className="text-4xl font-semibold">Create Account</h1>
+        <h1 className="text-center text-4xl font-semibold md:text-left">Create Account</h1>
       </header>
       <main>
         <form onSubmit={handleSubmit} className="mx-auto max-w-md md:mx-0">
