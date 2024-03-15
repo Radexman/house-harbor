@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { getAuth, updateProfile } from 'firebase/auth';
 import { FaUserEdit as NameIcon } from 'react-icons/fa';
-import { IoMdMail as MailIcon } from 'react-icons/io';
 import { doc, updateDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import db from '../../firebase.config';
@@ -87,8 +86,12 @@ function Profile() {
         </div>
       </header>
       <main className="mt-12">
-        <div className="flex items-center justify-between">
-          <p>Personal Details</p>
+        <div className="rounded-md bg-primary-content p-2">
+          <p>Name: {name}</p>
+          <p>Emaill: {email}</p>
+        </div>
+        <div className="mt-8 flex items-center justify-between">
+          <p>Change Personal Data</p>
           <button onClick={handleClick} type="button" className="btn btn-primary btn-sm">
             {changeDetails ? 'Done' : 'Change'}
           </button>
@@ -105,17 +108,6 @@ function Profile() {
                 type="text"
                 className="grow"
                 placeholder="Name"
-              />
-            </label>
-            <label htmlFor="email" className="input input-bordered flex items-center gap-2">
-              <MailIcon />
-              <input
-                value={email}
-                onChange={handleChange}
-                id="email"
-                type="text"
-                className="grow"
-                placeholder="Email"
               />
             </label>
           </form>

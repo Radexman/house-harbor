@@ -10,10 +10,7 @@ import { firebaseApp } from '../../firebase.config';
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState<SignInFormTypes>({
-    email: '',
-    password: '',
-  });
+  const [formData, setFormData] = useState<SignInFormTypes>({} as SignInFormTypes);
 
   const navigate = useNavigate();
 

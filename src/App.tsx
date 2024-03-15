@@ -12,6 +12,7 @@ import ScrollToTop from './components/ScrollToTop';
 import NotFound from './pages/NotFound/NotFound';
 import MobileNavbar from './components/layout/MobileNavbar/MobileNavbar';
 import Profile from './pages/Profile/Profile';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
@@ -22,7 +23,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Explore />} />
           <Route path="/offers" element={<Offers />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<PrivateRoute />}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
