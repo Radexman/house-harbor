@@ -41,7 +41,7 @@ function ForgotPassword() {
               <ArrowRightIcon />
             </button>
             <Link to="/sign-in">
-              <button type="button" className="underline duration-150 hover:text-primary">
+              <button type="button" className="text-sm underline duration-150 hover:text-primary">
                 Login
               </button>
             </Link>

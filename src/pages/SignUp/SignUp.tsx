@@ -10,6 +10,7 @@ import {
   FaEyeSlash as NonVisibleIcon,
 } from 'react-icons/fa';
 import { IoMdMail as MailIcon, IoMdCreate as CreateIcon } from 'react-icons/io';
+import bgImage from '../../assets/images/login-bg.jpg';
 import { SignUpFormTypes } from '../../types/Form.types';
 import db, { firebaseApp } from '../../firebase.config';
 
@@ -60,65 +61,83 @@ function SignUp() {
 
       navigate('/');
     } catch (error) {
-      toast.error('Something Went Wrong With Registration');
+      toast.error('Something went wrong with registration');
     }
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <header>
-        <h1 className="text-center text-4xl font-semibold md:text-left">Create Account</h1>
-      </header>
-      <main>
-        <form onSubmit={handleSubmit} className="mx-auto max-w-md md:mx-0">
-          <div className="mt-6 flex flex-col space-y-3">
-            <label htmlFor="email" className="input input-bordered flex items-center gap-2">
-              <MailIcon />
-              <input
-                type="email"
-                className="grow"
-                placeholder="Email"
-                id="email"
-                value={email}
-                onChange={handleChange}
-              />
-            </label>
-            <label htmlFor="name" className="input input-bordered flex items-center gap-2">
-              <NameIcon />
-              <input type="text" className="grow" placeholder="Name" id="name" value={name} onChange={handleChange} />
-            </label>
-            <label htmlFor="password" className="input input-bordered flex items-center gap-2">
-              <KeyIcon />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                className="grow"
-                placeholder="Password"
-                id="password"
-                value={password}
-                onChange={handleChange}
-              />
-              <button type="button" onClick={() => setShowPassword((prevState) => !prevState)}>
-                {showPassword ? <NonVisibleIcon /> : <VisibleIcon />}
-              </button>
-            </label>
-            <div className="flex justify-between">
-              <button type="submit" className="btn btn-primary ">
-                Create New Account
-                <CreateIcon />
-              </button>
-            </div>
+    <div>
+      <div className="flex flex-col md:flex-row">
+        <div className="relative w-full md:w-3/5">
+          <img src={bgImage} alt="Abstract shapes" className="h-auto saturate-50 md:h-[90vh]" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-2 text-center text-primary-content md:p-8">
+            <p className="text-2xl font-semibold">Welcome To House Harbor</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
           </div>
-        </form>
-        <OAuth />
-        <div className="mx-auto mt-8 max-w-md text-center text-sm md:mx-0 md:text-left">
-          <p>Already have an account?</p>
-          <Link to="/sign-in">
-            <button type="submit" className="underline duration-150 hover:text-primary">
-              Login
-            </button>
-          </Link>
         </div>
-      </main>
+        <div className="w-full p-8 md:w-2/4">
+          <header>
+            <h1 className="text-center text-4xl font-semibold md:text-left">Create Account</h1>
+          </header>
+          <main>
+            <form onSubmit={handleSubmit} className="mx-auto max-w-md md:mx-0">
+              <div className="mt-6 flex flex-col space-y-3">
+                <label htmlFor="email" className="input input-bordered flex items-center gap-2">
+                  <MailIcon />
+                  <input
+                    type="email"
+                    className="grow"
+                    placeholder="Email"
+                    id="email"
+                    value={email}
+                    onChange={handleChange}
+                  />
+                </label>
+                <label htmlFor="name" className="input input-bordered flex items-center gap-2">
+                  <NameIcon />
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="Name"
+                    id="name"
+                    value={name}
+                    onChange={handleChange}
+                  />
+                </label>
+                <label htmlFor="password" className="input input-bordered flex items-center gap-2">
+                  <KeyIcon />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    className="grow"
+                    placeholder="Password"
+                    id="password"
+                    value={password}
+                    onChange={handleChange}
+                  />
+                  <button type="button" onClick={() => setShowPassword((prevState) => !prevState)}>
+                    {showPassword ? <NonVisibleIcon /> : <VisibleIcon />}
+                  </button>
+                </label>
+                <div className="flex justify-between">
+                  <button type="submit" className="btn btn-primary ">
+                    Create New Account
+                    <CreateIcon />
+                  </button>
+                </div>
+              </div>
+            </form>
+            <OAuth />
+            <div className="mx-auto mb-14 mt-8 max-w-md text-center text-sm md:mx-0 md:mb-0 md:text-left">
+              <p>Already have an account?</p>
+              <Link to="/sign-in">
+                <button type="submit" className="underline duration-150 hover:text-primary">
+                  Login
+                </button>
+              </Link>
+            </div>
+          </main>
+        </div>
+      </div>
     </div>
   );
 }

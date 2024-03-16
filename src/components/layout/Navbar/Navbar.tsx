@@ -5,7 +5,7 @@ function Navbar() {
   const navigate = useNavigate();
 
   return (
-    <nav className="navbar bg-base-100 shadow-md">
+    <nav className="navbar h-[10vh] bg-base-100 shadow-md">
       <div className="flex-1">
         <button type="button" className="text-2xl font-semibold" onClick={() => navigate('')}>
           House Harbor
