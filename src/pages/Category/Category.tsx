@@ -1,6 +1,41 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { collection, getDocs, query, where, orderBy, limit, startAfter } from 'firebase/firestore';
+import db from '../../firebase.config';
+import { toast } from 'react-toastify';
+import Spinner from '../../components/Spinner';
+
 function Category() {
+  const [listings, setListings] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const params = useParams();
+
+  const fetchListings = async () => {
+    try {
+      // Get reference
+      const listingsRef = collection(db, 'listings');
+
+      //  Create a query
+      const q = query(listingsRef, where('type', '==', params.categoryName), orderBy('timestamp', 'desc'), limit(10));
+
+      //   Execute query
+      const querySnap = await getDocs(q);
+
+      let listings = [];
+
+      querySnap.forEach((doc) => {
+        console.log(doc);
+      });
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchListings();
+  });
+
   return (
-    <div className="container p-4">
+    <div className="container mx-auto mb-20 p-4">
       <h1>Category</h1>
     </div>
   );
