@@ -6,7 +6,12 @@ function Listings({ listings }: CategoryPropTypes) {
     <main>
       <ul>
         {listings.map((listing: ListingType) => (
-          <p>{listing.data.name}</p>
+          <div key={listing.id}>
+            <p>{listing.data.name}</p>
+            <p>{`${
+              listing.data.parking ? 'This property has parking spot' : 'This property does not have parking spot'
+            }`}</p>
+          </div>
         ))}
       </ul>
     </main>

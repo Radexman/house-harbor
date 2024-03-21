@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { useEffect, useState } from 'react';
 import { collection, getDocs, query, where, orderBy, limit, startAfter } from 'firebase/firestore';
 import { useParams } from 'react-router-dom';
@@ -47,12 +48,11 @@ function Category() {
 
   return (
     <div className="container mx-auto mb-20 p-4">
-      <header>
+      <header className="mb-8">
         <h1 className="text-4xl font-bold">
           {params.categoryName === 'rent' ? 'Properties For Rent' : 'Properties For Sale'}
         </h1>
       </header>
-
       {isLoading ? (
         <Spinner />
       ) : listings && listings.length > 0 ? (
