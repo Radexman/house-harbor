@@ -7,7 +7,7 @@ export type ListingType = {
     discountedPrice: number;
     furnished: boolean;
     geolocation: GeoPoint;
-    imageUrls: string[];
+    imagesUrls: string[];
     location: string;
     name: string;
     offer: boolean;

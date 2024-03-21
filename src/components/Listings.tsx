@@ -1,17 +1,13 @@
 import { ListingType } from '../types/Listing.type';
 import { CategoryPropTypes } from '../pages/Category/Category.types';
+import ListingItem from './ListingItem';
 
 function Listings({ listings }: CategoryPropTypes) {
   return (
     <main>
-      <ul>
+      <ul className="space-y-8">
         {listings.map((listing: ListingType) => (
-          <div key={listing.id}>
-            <p>{listing.data.name}</p>
-            <p>{`${
-              listing.data.parking ? 'This property has parking spot' : 'This property does not have parking spot'
-            }`}</p>
-          </div>
+          <ListingItem listing={listing} />
         ))}
       </ul>
     </main>
