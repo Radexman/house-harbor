@@ -7,7 +7,11 @@ function Listings({ listings }: CategoryPropTypes) {
     <main>
       <ul className="space-y-8">
         {listings.map((listing: ListingType) => (
-          <ListingItem key={listing.id} listing={listing} />
+          <ListingItem
+            key={listing.id}
+            listing={listing.data}
+            id={listing.id}
+          />
         ))}
       </ul>
     </main>

@@ -4,51 +4,55 @@ import { IoIosBed as BedroomIcon } from 'react-icons/io';
 import { FaBath as BathroomIcon } from 'react-icons/fa';
 import { ListingOnePropTypes } from './ListingOne.types';
 
-function ListingItem({ listing }: ListingOnePropTypes) {
+function ListingItem({ listing, id }: ListingOnePropTypes) {
   return (
-    <li key={listing.id} className="mx-auto max-w-6xl shadow-md">
+    <li
+      key={id}
+      className="mx-auto max-w-6xl rounded-md shadow-md shadow-stone-500 transition-all hover:shadow-xl hover:shadow-stone-500"
+    >
       <Link
-        to={`/category/${listing.data.type}/${listing.id}`}
-        className="flex flex-col gap-3 rounded-md bg-secondary-content p-3 md:flex-row"
+        to={`/category/${listing.type}/${id}`}
+        className="flex flex-col gap-3 rounded-md bg-secondary-content p-3 sm:flex-row"
       >
         <div>
           <img
-            src={listing.data.imagesUrls[0]}
-            alt={`${listing.data.name} house`}
-            className="h-auto w-full rounded-lg md:h-32 md:min-w-52"
+            src={listing.imagesUrls[0]}
+            alt={`${listing.name} house`}
+            className="h-auto w-full rounded-md sm:h-32 sm:min-w-52"
           />
         </div>
         <div>
-          <p className="text-sm">{listing.data.location}</p>
-          <h2 className="text-xl font-bold md:text-2xl">{listing.data.name}</h2>
+          <p className="text-sm">{listing.location}</p>
+          <h2 className="text-xl font-bold md:text-2xl">{listing.name}</h2>
           <p className="pt-1 text-sm font-semibold text-primary">
             $
-            {listing.data.offer
-              ? listing.data.discountedPrice
+            {listing.offer
+              ? listing.discountedPrice
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-              : listing.data.regularPrice
+              : listing.regularPrice
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           </p>
           <div className="flex items-center gap-1">
             <BedroomIcon />
             <p className="text-sm">
-              {listing.data.bedrooms > 1
-                ? `${listing.data.bedrooms} Bedrooms`
+              {listing.bedrooms > 1
+                ? `${listing.bedrooms} Bedrooms`
                 : '1 Bedroom'}
             </p>
           </div>
           <div className="flex items-center gap-1">
             <BathroomIcon />
             <p className="text-sm">
-              {listing.data.bathrooms > 1
-                ? `${listing.data.bathrooms} Bathrooms`
+              {listing.bathrooms > 1
+                ? `${listing.bathrooms} Bathrooms`
                 : '1 Bathroom'}
             </p>
           </div>
         </div>
       </Link>
+      {/* Add on delete incon */}
     </li>
   );
 }
