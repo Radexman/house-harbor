@@ -1,6 +1,13 @@
 /* eslint-disable no-nested-ternary */
 import { useEffect, useState } from 'react';
-import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
+} from 'firebase/firestore';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import db from '../../firebase.config';
@@ -20,7 +27,12 @@ function Category() {
       const listingsRef = collection(db, 'listings');
 
       //  Create a query
-      const q = query(listingsRef, where('type', '==', params.categoryName), orderBy('timestamp', 'desc'), limit(10));
+      const q = query(
+        listingsRef,
+        where('type', '==', params.categoryName),
+        orderBy('timestamp', 'desc'),
+        limit(10)
+      );
 
       //   Execute query
       const querySnap = await getDocs(q);
@@ -49,8 +61,10 @@ function Category() {
   return (
     <div className="container mx-auto mb-20 p-4">
       <header className="mb-8">
-        <h1 className="text-4xl font-bold">
-          {params.categoryName === 'rent' ? 'Properties For Rent' : 'Properties For Sale'}
+        <h1 className="text-center text-4xl font-bold md:text-left">
+          {params.categoryName === 'rent'
+            ? 'Properties For Rent'
+            : 'Properties For Sale'}
         </h1>
       </header>
       {isLoading ? (

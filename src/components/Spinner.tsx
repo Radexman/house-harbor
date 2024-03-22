@@ -1,7 +1,7 @@
 function Spinner() {
   return (
-    <div id="loading-bar-spinner" className="spinner">
-      <div className="spinner-icon" />
+    <div className="flex h-[50vh] items-center justify-center">
+      <span className="loading loading-ring loading-lg" />
     </div>
   );
 }
