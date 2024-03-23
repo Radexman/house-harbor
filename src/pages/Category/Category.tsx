@@ -26,7 +26,7 @@ function Category() {
       // Get reference
       const listingsRef = collection(db, 'listings');
 
-      //  Create a query
+      //  Create a query for either rent or sale category
       const q = query(
         listingsRef,
         where('type', '==', params.categoryName),
@@ -50,7 +50,7 @@ function Category() {
       setListings(fetchedListings);
       setIsLoading(false);
     } catch (error) {
-      toast.error('Could not fetch listings');
+      toast.error(`Could not fetch ${params.categoryName} listings`);
     }
   };
 
