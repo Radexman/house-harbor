@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { useEffect, useState } from 'react';
 import {
   collection,
@@ -45,8 +46,6 @@ function Offers() {
 
       setListings(fetchedListings);
       setIsLoading(false);
-
-      console.log(listings);
     } catch (error) {
       toast.error('Could not fetch offer listings');
     }
@@ -57,8 +56,17 @@ function Offers() {
   }, []);
 
   return (
-    <div className="container mx-auto">
-      <h1 className="text-4xl font-bold">Offers</h1>
+    <div className="container mx-auto mb-20 p-4">
+      <header className="mb-8">
+        <h1 className="text-4xl font-bold">Offers</h1>
+      </header>
+      {isLoading ? (
+        <Spinner />
+      ) : listings && listings.length > 0 ? (
+        <Listings listings={listings} />
+      ) : (
+        <p>No listings for offers</p>
+      )}
     </div>
   );
 }
