@@ -4,16 +4,23 @@ import saleImage from '../../assets/images/house-1.jpg';
 
 function Explore() {
   return (
-    <div className="container mx-auto mb-20 p-4">
+    <div className="container mx-auto mb-20 min-h-screen p-4">
       <header>
-        <h1 className="text-center text-4xl font-semibold md:text-left">Explore</h1>
+        <h1 className="text-center text-4xl font-semibold md:text-left">
+          Explore
+        </h1>
       </header>
       <main>
         <h2 className="text-xl">Categories</h2>
-        <p className="py-2">Choose one of the categories of properites to browse through</p>
+        <p className="py-2">
+          Choose one of the categories of properites to browse through
+        </p>
         <div className="mx-auto flex flex-col items-center gap-6 md:flex-row">
           <button type="button" className="group w-full md:w-1/2">
-            <Link to="/category/rent" className="flex items-center justify-center">
+            <Link
+              to="/category/rent"
+              className="flex items-center justify-center"
+            >
               <div className="relative">
                 <img
                   src={rentImage}
@@ -27,7 +34,10 @@ function Explore() {
             </Link>
           </button>
           <button type="button" className="group w-full md:w-1/2">
-            <Link to="/category/sale" className="flex items-center justify-center">
+            <Link
+              to="/category/sale"
+              className="flex items-center justify-center"
+            >
               <div className="relative">
                 <img
                   src={saleImage}

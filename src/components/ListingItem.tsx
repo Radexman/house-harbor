@@ -8,11 +8,11 @@ function ListingItem({ listing, id }: ListingOnePropTypes) {
   return (
     <li
       key={id}
-      className="mx-auto max-w-6xl rounded-md shadow-md shadow-stone-500 transition-all hover:shadow-xl hover:shadow-stone-500"
+      className="container mx-auto rounded-md shadow-sm shadow-secondary transition-all hover:shadow-md hover:shadow-secondary"
     >
       <Link
         to={`/category/${listing.type}/${id}`}
-        className="flex flex-col gap-3 rounded-md bg-secondary-content p-3 sm:flex-row"
+        className="flex flex-col gap-3 rounded-md p-3 sm:flex-row"
       >
         <div>
           <img

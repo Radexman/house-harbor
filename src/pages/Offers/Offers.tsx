@@ -59,6 +59,12 @@ function Offers() {
     <div className="container mx-auto mb-20 p-4">
       <header className="mb-8">
         <h1 className="text-4xl font-bold">Offers</h1>
+        <p className="pt-2">
+          Explore our discounted featured offers. These properties are available
+          for rent at reduced rates from their initial prices. Find your perfect
+          living space today and seize the opportunity to save on your dream
+          property.
+        </p>
       </header>
       {isLoading ? (
         <Spinner />
