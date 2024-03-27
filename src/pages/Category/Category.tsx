@@ -66,6 +66,11 @@ function Category() {
             ? 'Properties For Rent'
             : 'Properties For Sale'}
         </h1>
+        <p className="pt-4">
+          {params.categoryName === 'rent'
+            ? 'Find your perfect rental home here. Explore a range of houses available for rent, from cozy apartments to spacious family homes.'
+            : 'Discover your dream home for sale here. Explore a variety of houses on the market, from charming cottages to luxurious estates.'}
+        </p>
       </header>
       {isLoading ? (
         <Spinner />

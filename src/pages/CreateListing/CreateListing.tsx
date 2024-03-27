@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, FormEvent } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { firebaseApp } from '../../firebase.config';
@@ -24,6 +24,23 @@ function CreateListing() {
     longitude: 0,
   });
 
+  const {
+    type,
+    name,
+    bedrooms,
+    userRef,
+    bathrooms,
+    parking,
+    furnished,
+    location,
+    offer,
+    regularPrice,
+    discountedPrice,
+    imagesUrls,
+    latitude,
+    longitude,
+  } = formData;
+
   const auth = getAuth(firebaseApp);
   const navigate = useNavigate();
   const isMounted = useRef(true);
@@ -42,12 +59,102 @@ function CreateListing() {
     return () => {
       isMounted.current = false;
     };
-  }, [auth, formData, isMounted, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMounted]);
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
+  const handleMutate = () => {};
 
   return (
     <div className="container mx-auto min-h-screen p-4">
-      <h1 className="text-4xl font-semibold">Create Listing</h1>
-      {isLoading ? <Spinner /> : <div>Form</div>}
+      <h1 className="text-4xl font-semibold">Create a Listing</h1>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <header>
+          <form onSubmit={handleSubmit} className="rounded-md p-4 shadow-md">
+            <div className="flex flex-col">
+              <p className="text-lg font-semibold">Sell / Rent</p>
+              <label htmlFor="type" id="type" className="space-x-9">
+                <input
+                  type="radio"
+                  name="type"
+                  id="sale"
+                  value="sale"
+                  className="radio-primary radio"
+                  onClick={handleMutate}
+                />
+                <input
+                  type="radio"
+                  name="type"
+                  id="rent"
+                  value="rent"
+                  className="radio-primary radio"
+                  onClick={handleMutate}
+                  checked
+                />
+              </label>
+            </div>
+            <div className="divider" />
+            <div className="flex flex-col">
+              <p className="text-lg font-semibold">Name</p>
+              <label
+                htmlFor="name"
+                id="name"
+                className="input input-bordered flex items-center gap-2"
+              >
+                <input
+                  type="text"
+                  id="name"
+                  className="grow"
+                  onChange={handleMutate}
+                  required
+                />
+              </label>
+            </div>
+            <div className="divider" />
+            <div className="flex space-x-6">
+              <div className="flex flex-col">
+                <p className="text-lg font-semibold">Bedrooms</p>
+                <label
+                  htmlFor="bedrooms"
+                  id="bedrooms"
+                  className="input input-bordered flex items-center gap-2"
+                >
+                  <input
+                    type="number"
+                    id="bedrooms"
+                    min="1"
+                    max="50"
+                    className="grow"
+                    required
+                  />
+                </label>
+              </div>
+              <div className="flex flex-col">
+                <p className="text-lg font-semibold">Bathrooms</p>
+                <label
+                  htmlFor="bathrooms"
+                  id="bathrooms"
+                  className="input input-bordered flex items-center gap-2"
+                >
+                  <input
+                    type="number"
+                    id="bathrooms"
+                    min="1"
+                    max="50"
+                    className="grow"
+                    required
+                  />
+                </label>
+              </div>
+            </div>
+          </form>
+        </header>
+      )}
     </div>
   );
 }
