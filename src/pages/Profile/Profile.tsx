@@ -1,4 +1,8 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import {
+  IoIosArrowForward as ArrowIcon,
+  IoIosHome as HomeIcon,
+} from 'react-icons/io';
 import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { getAuth, updateProfile } from 'firebase/auth';
 import { FaUserEdit as NameIcon } from 'react-icons/fa';
@@ -76,42 +80,69 @@ function Profile() {
   }, [changeDetails]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto min-h-screen p-4">
       <header className="mt-4">
         <div className="flex items-center justify-between">
           <h1 className="text-4xl font-semibold">My Profile</h1>
-          <button onClick={handleLogout} type="button" className="btn btn-primary btn-sm">
+          <button
+            onClick={handleLogout}
+            type="button"
+            className="btn btn-primary btn-sm"
+          >
             Logout
           </button>
         </div>
       </header>
-      <main className="mt-12">
-        <div className="rounded-md border-[1px] p-2">
-          <p>Name: {name}</p>
-          <p>Email: {email}</p>
+      <main className="py-4">
+        <p className="pb-4">
+          Welcome to your profile page. Here, you can review and update your
+          information, create captivating listings for sale or rent, and easily
+          log out when you&apos;re done. Take control of your home listing
+          journey effortlessly.
+        </p>
+        <h2 className="pb-2 text-xl font-semibold">Profile Details</h2>
+        <div className="mb-6 rounded-md p-2 shadow-md">
+          <p className="font-semibold">{name}</p>
+          <p className="font-semibold">{email}</p>
+          <div className="mt-8 flex items-center justify-between">
+            <p>Change Personal Data</p>
+            <button
+              onClick={handleClick}
+              type="button"
+              className="btn btn-primary btn-sm"
+            >
+              {changeDetails ? 'Done' : 'Change'}
+            </button>
+          </div>
+          <div>
+            <form
+              className={`${changeDetails ? 'block' : 'hidden'} mt-8 space-y-4`}
+            >
+              <label
+                htmlFor="name"
+                className="input input-bordered flex items-center gap-2"
+              >
+                <NameIcon />
+                <input
+                  ref={inputRef}
+                  value={name}
+                  onChange={handleChange}
+                  id="name"
+                  type="text"
+                  className="grow"
+                  placeholder="Name"
+                />
+              </label>
+            </form>
+          </div>
         </div>
-        <div className="mt-8 flex items-center justify-between">
-          <p>Change Personal Data</p>
-          <button onClick={handleClick} type="button" className="btn btn-primary btn-sm">
-            {changeDetails ? 'Done' : 'Change'}
-          </button>
-        </div>
-        <div className="mt-8">
-          <form className={`${changeDetails ? 'block' : 'hidden'} space-y-4`}>
-            <label htmlFor="name" className="input input-bordered flex items-center gap-2">
-              <NameIcon />
-              <input
-                ref={inputRef}
-                value={name}
-                onChange={handleChange}
-                id="name"
-                type="text"
-                className="grow"
-                placeholder="Name"
-              />
-            </label>
-          </form>
-        </div>
+        <button type="button" className="btn btn-primary btn-wide">
+          <Link to="/create-listing" className="flex space-x-4">
+            <HomeIcon />
+            <p>Sell or rent your home</p>
+            <ArrowIcon />
+          </Link>
+        </button>
       </main>
     </div>
   );

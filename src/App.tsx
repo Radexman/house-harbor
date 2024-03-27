@@ -15,6 +15,7 @@ import NotFound from './pages/NotFound/NotFound';
 import MobileNavbar from './components/layout/MobileNavbar/MobileNavbar';
 import Profile from './pages/Profile/Profile';
 import PrivateRoute from './components/PrivateRoute';
+import CreateListing from './pages/CreateListing/CreateListing';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/create-listing" element={<CreateListing />} />
         <Route path="/notfound" element={<NotFound />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

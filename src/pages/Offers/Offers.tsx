@@ -71,7 +71,7 @@ function Offers() {
       ) : listings && listings.length > 0 ? (
         <Listings listings={listings} />
       ) : (
-        <p>No listings for offers</p>
+        <p>No listings for offers yet</p>
       )}
     </div>
   );

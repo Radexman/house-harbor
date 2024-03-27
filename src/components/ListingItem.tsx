@@ -34,6 +34,7 @@ function ListingItem({ listing, id }: ListingOnePropTypes) {
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           </p>
+
           <div className="flex items-center gap-1">
             <BedroomIcon />
             <p className="text-sm">
