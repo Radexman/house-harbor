@@ -1,14 +1,22 @@
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { MdDeleteForever as DeleteIcon } from 'react-icons/md';
 import { IoIosBed as BedroomIcon } from 'react-icons/io';
 import { FaBath as BathroomIcon } from 'react-icons/fa';
 import { ListingOnePropTypes } from './ListingOne.types';
+import AppContext from '../context/AppContext';
 
 function ListingItem({ listing, id }: ListingOnePropTypes) {
+  const { theme } = useContext(AppContext);
+
   return (
     <li
       key={id}
-      className="container mx-auto rounded-md shadow-sm shadow-secondary transition-all hover:shadow-md hover:shadow-secondary"
+      className={`${
+        theme === 'dark'
+          ? 'shadow-sm shadow-primary hover:shadow-lg hover:shadow-primary'
+          : 'shadow-lg hover:shadow-2xl'
+      } container mx-auto rounded-md  transition-all `}
     >
       <Link
         to={`/category/${listing.type}/${id}`}

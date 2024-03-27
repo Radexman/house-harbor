@@ -6,6 +6,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Montserrat', 'sans-serif'],
+        brand: ['Pacifico', 'cursive'],
       },
       textShadow: {
         sm: '0 1px 2px var(--tw-shadow-color)',

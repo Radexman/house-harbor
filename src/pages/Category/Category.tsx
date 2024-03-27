@@ -34,7 +34,7 @@ function Category() {
         limit(10)
       );
 
-      //   Execute query
+      // Execute query
       const querySnap = await getDocs(q);
 
       const fetchedListings: ListingType[] = [];

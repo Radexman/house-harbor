@@ -5,10 +5,14 @@ function Navbar() {
   const navigate = useNavigate();
 
   return (
-    <nav className="navbar h-[10vh] bg-base-100 shadow-md">
+    <nav className="navbar bg-base-100 px-6 shadow-md">
       <div className="flex-1">
-        <button type="button" className="text-2xl font-semibold" onClick={() => navigate('')}>
-          House Harbor
+        <button
+          type="button"
+          className="text-2xl font-semibold"
+          onClick={() => navigate('')}
+        >
+          <p className="font-brand text-3xl">House Harbor</p>
         </button>
       </div>
       <div className="flex-none">
