@@ -87,8 +87,8 @@ function Explore() {
               <div className="card-body">
                 <h2 className="card-title">
                   Properties For Rent
-                  <div className="badge badge-secondary">
-                    {saleListings.length} Avialable
+                  <div className="badge badge-secondary badge-outline h-6 w-6 rounded-full text-secondary">
+                    {saleListings.length}
                   </div>
                 </h2>
                 <p>
@@ -113,8 +113,8 @@ function Explore() {
               <div className="card-body">
                 <h2 className="card-title">
                   Properties For Sale
-                  <div className="badge badge-secondary">
-                    {rentListings.length} Avialable
+                  <div className="badge badge-secondary badge-outline h-6 w-6 rounded-full text-secondary">
+                    {rentListings.length}
                   </div>
                 </h2>
                 <p>
