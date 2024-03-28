@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState, useEffect, useRef, FormEvent } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
@@ -78,24 +79,31 @@ function CreateListing() {
           <form onSubmit={handleSubmit} className="rounded-md p-4 shadow-md">
             <div className="flex flex-col">
               <p className="text-lg font-semibold">Sell / Rent</p>
-              <label htmlFor="type" id="type" className="space-x-9">
-                <input
-                  type="radio"
-                  name="type"
-                  id="sale"
-                  value="sale"
-                  className="radio-primary radio"
-                  onClick={handleMutate}
-                />
-                <input
-                  type="radio"
-                  name="type"
-                  id="rent"
-                  value="rent"
-                  className="radio-primary radio"
-                  onClick={handleMutate}
-                  checked
-                />
+              <label id="type">
+                <div className="space-x-2">
+                  <button
+                    type="button"
+                    id="type"
+                    value="sale"
+                    onClick={handleMutate}
+                    className={`${
+                      type === 'sale' ? 'btn-primary' : ''
+                    } btn btn-wide`}
+                  >
+                    Sell
+                  </button>
+                  <button
+                    type="button"
+                    id="type"
+                    value="rent"
+                    onClick={handleMutate}
+                    className={`${
+                      type === 'rent' ? 'btn-primary' : ''
+                    } btn btn-wide`}
+                  >
+                    Rent
+                  </button>
+                </div>
               </label>
             </div>
             <div className="divider" />
@@ -109,7 +117,8 @@ function CreateListing() {
                 <input
                   type="text"
                   id="name"
-                  className="grow"
+                  value={name}
+                  className="grow font-semibold"
                   onChange={handleMutate}
                   required
                 />
@@ -127,9 +136,10 @@ function CreateListing() {
                   <input
                     type="number"
                     id="bedrooms"
+                    onChange={handleMutate}
                     min="1"
                     max="50"
-                    className="grow"
+                    className="w-20 grow font-semibold"
                     required
                   />
                 </label>
@@ -144,9 +154,10 @@ function CreateListing() {
                   <input
                     type="number"
                     id="bathrooms"
+                    onChange={handleMutate}
                     min="1"
                     max="50"
-                    className="grow"
+                    className="w-20 grow font-semibold "
                     required
                   />
                 </label>
