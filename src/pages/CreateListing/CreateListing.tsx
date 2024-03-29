@@ -3,12 +3,13 @@ import { useState, useEffect, useRef, FormEvent } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { firebaseApp } from '../../firebase.config';
+import { SingleListingType } from './SingleListing.types';
 import Spinner from '../../components/Spinner';
 
 function CreateListing() {
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SingleListingType>({
     type: 'rent',
     userRef: '',
     name: '',
@@ -17,7 +18,7 @@ function CreateListing() {
     parking: false,
     furnished: false,
     location: '',
-    offer: false,
+    offer: true,
     regularPrice: 0,
     discountedPrice: 0,
     imagesUrls: {},
@@ -137,6 +138,7 @@ function CreateListing() {
                     type="number"
                     id="bedrooms"
                     onChange={handleMutate}
+                    value={bedrooms}
                     min="1"
                     max="50"
                     className="w-20 grow font-semibold"
@@ -155,6 +157,7 @@ function CreateListing() {
                     type="number"
                     id="bathrooms"
                     onChange={handleMutate}
+                    value={bathrooms}
                     min="1"
                     max="50"
                     className="w-20 grow font-semibold "
@@ -163,6 +166,209 @@ function CreateListing() {
                 </label>
               </div>
             </div>
+            <div className="divider" />
+            <div className="flex flex-col">
+              <p className="text-lg font-semibold">Parking Spot</p>
+              <label id="parking">
+                <div className="space-x-2">
+                  <button
+                    type="button"
+                    id="parking"
+                    value={true}
+                    onClick={handleMutate}
+                    className={`${parking ? 'btn-primary' : ''} btn btn-wide`}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    type="button"
+                    id="parking"
+                    value={false}
+                    onClick={handleMutate}
+                    className={`${
+                      !parking && parking !== null ? 'btn-primary' : ''
+                    } btn btn-wide`}
+                  >
+                    No
+                  </button>
+                </div>
+              </label>
+            </div>
+            <div className="divider" />
+            <div className="flex flex-col">
+              <p className="text-lg font-semibold">Furnished</p>
+              <label id="furnished">
+                <div className="space-x-2">
+                  <button
+                    type="button"
+                    id="furnished"
+                    value={true}
+                    onClick={handleMutate}
+                    className={`${furnished ? 'btn-primary' : ''} btn btn-wide`}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    type="button"
+                    id="furnished"
+                    value={false}
+                    onClick={handleMutate}
+                    className={`${
+                      !furnished && furnished !== null ? 'btn-primary' : ''
+                    } btn btn-wide`}
+                  >
+                    No
+                  </button>
+                </div>
+              </label>
+            </div>
+            <div className="divider" />
+            <div className="flex flex-col">
+              <p className="text-lg font-semibold">Address</p>
+              <label htmlFor="location" id="location" />
+              <textarea
+                name="location"
+                id="location"
+                value={location}
+                className="grow rounded-md border-2 font-semibold"
+                cols={30}
+                rows={10}
+              />
+              {!geolocationEnabled && (
+                <div className="flex flex-col space-y-2">
+                  <p className="text-lg font-semibold">Latitude</p>
+                  <label
+                    htmlFor="latitude"
+                    id="latitude"
+                    className="input input-bordered flex items-center gap-2"
+                  >
+                    <input
+                      type="text"
+                      id="latitude"
+                      value={latitude}
+                      className="grow font-semibold"
+                      onChange={handleMutate}
+                      required
+                    />
+                  </label>
+                  <p className="text-lg font-semibold">Longitude</p>
+                  <label
+                    htmlFor="longitude"
+                    id="longitude"
+                    className="input input-bordered flex items-center gap-2"
+                  >
+                    <input
+                      type="text"
+                      id="longitude"
+                      value={longitude}
+                      className="grow font-semibold"
+                      onChange={handleMutate}
+                      required
+                    />
+                  </label>
+                </div>
+              )}
+            </div>
+            <div className="divider" />
+            <div className="flex flex-col">
+              <p className="text-lg font-semibold">Offer</p>
+              <label id="offer">
+                <div className="space-x-2">
+                  <button
+                    type="button"
+                    id="offer"
+                    value={true}
+                    onClick={handleMutate}
+                    className={`${offer ? 'btn-primary' : ''} btn btn-wide`}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    type="button"
+                    id="offer"
+                    value={false}
+                    onClick={handleMutate}
+                    className={`${
+                      !offer && offer !== null ? 'btn-primary' : ''
+                    } btn btn-wide`}
+                  >
+                    No
+                  </button>
+                </div>
+              </label>
+            </div>
+            <div className="divider" />
+            <div className="flex space-x-6">
+              <div className="flex flex-col">
+                <p className="text-lg font-semibold">Regular Price</p>
+                <label
+                  htmlFor="regularPrice"
+                  id="regularPrice"
+                  className="input input-bordered flex items-center gap-2"
+                >
+                  <input
+                    type="number"
+                    id="regularPrice"
+                    onChange={handleMutate}
+                    value={regularPrice}
+                    min="50"
+                    max="7500000000"
+                    className="w-20 grow font-semibold"
+                    required
+                  />
+                  <p className="font-semibold">$</p>
+                  {type === 'rent' && <p className="font-semibold"> / Month</p>}
+                </label>
+              </div>
+            </div>
+            <div className="divider" />
+            {offer && (
+              <div className="flex space-x-6">
+                <div className="flex flex-col">
+                  <p className="text-lg font-semibold">Discounted Price</p>
+                  <label
+                    htmlFor="discountedPrice"
+                    id="discountedPrice"
+                    className="input input-bordered flex items-center gap-2"
+                  >
+                    <input
+                      type="number"
+                      id="discountedPrice"
+                      onChange={handleMutate}
+                      value={discountedPrice}
+                      min="50"
+                      max="7500000000"
+                      className="w-20 grow font-semibold"
+                      required
+                    />
+                    <p className="font-semibold">$</p>
+                    {type === 'rent' && (
+                      <p className="font-semibold"> / Month</p>
+                    )}
+                  </label>
+                </div>
+              </div>
+            )}
+            <div className="divider" />
+            <div className="flex flex-col space-y-2">
+              <p className="text-lg font-semibold">Images</p>
+              <p>The first image will be the cover (max 6).</p>
+              <label htmlFor="imagesUrls" id="imagesUrls" />
+              <input
+                type="file"
+                id="imagesUrls"
+                name="imagesUrls"
+                max={6}
+                accept=".jpg,.png,.jpeg"
+                multiple
+                className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+                required
+              />
+            </div>
+            <div className="divider" />
+            <button type="submit" className="btn btn-primary btn-wide mt-8">
+              Create Listing
+            </button>
           </form>
         </header>
       )}
