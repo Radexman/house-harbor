@@ -1,16 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import {
-  useState,
-  useEffect,
-  useRef,
-  FormEvent,
-  ChangeEvent,
-  MouseEventHandler,
-} from 'react';
+import { useState, useEffect, useRef, FormEvent } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { firebaseApp } from '../../firebase.config';
 import { SingleListingType } from './SingleListing.types';
+import { toast } from 'react-toastify';
 import Spinner from '../../components/Spinner';
 
 function CreateListing() {
@@ -24,7 +18,7 @@ function CreateListing() {
     bathrooms: 1,
     parking: false,
     furnished: false,
-    location: '',
+    address: '',
     offer: true,
     regularPrice: 0,
     discountedPrice: 0,
@@ -41,7 +35,7 @@ function CreateListing() {
     bathrooms,
     parking,
     furnished,
-    location,
+    address,
     offer,
     regularPrice,
     discountedPrice,
@@ -71,9 +65,53 @@ function CreateListing() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMounted]);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+
+    setIsLoading(true);
+
+    if (discountedPrice >= regularPrice) {
+      setIsLoading(false);
+      toast.error('Discounted price needs to be less than regular price');
+    }
+
+    if (imagesUrls.length > 6) {
+      setIsLoading(false);
+      toast.error('Max 6 images');
+    }
+
+    const geolocation = {
+      lat: 0,
+      lng: 0,
+    };
+
+    let location = '';
+
+    if (geolocationEnabled) {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}`
+      );
+
+      const data = await response.json();
+      geolocation.lat = data.results[0]?.geometry.location.lat ?? 0;
+      geolocation.lng = data.results[0]?.geometry.location.lng ?? 0;
+
+      location =
+        data.status === 'ZERO_RESULTS'
+          ? 'undefined'
+          : data.results[0]?.formatted_address;
+
+      if (location === undefined || location.includes('undefined')) {
+        setIsLoading(false);
+        toast.error('Please enter a corret address');
+      }
+    } else {
+      geolocation.lat = latitude;
+      geolocation.lng = longitude;
+      location = address;
+    }
+
+    setIsLoading(false);
   };
 
   const handleMutate = (e) => {
@@ -259,11 +297,11 @@ function CreateListing() {
             <div className="divider" />
             <div className="flex flex-col">
               <p className="text-lg font-semibold">Address</p>
-              <label htmlFor="location" />
+              <label htmlFor="address" />
               <textarea
-                name="location"
-                id="location"
-                value={location}
+                name="address"
+                id="address"
+                value={address}
                 onChange={handleMutate}
                 className="grow rounded-md border-2 p-2 font-semibold"
                 cols={30}
@@ -358,33 +396,35 @@ function CreateListing() {
             </div>
             <div className="divider" />
             {offer && (
-              <div className="flex space-x-6">
-                <div className="flex flex-col">
-                  <p className="text-lg font-semibold">Discounted Price</p>
-                  <label
-                    htmlFor="discountedPrice"
-                    id="discountedPrice"
-                    className="input input-bordered flex items-center gap-2"
-                  >
-                    <input
-                      type="number"
+              <>
+                <div className="flex space-x-6">
+                  <div className="flex flex-col">
+                    <p className="text-lg font-semibold">Discounted Price</p>
+                    <label
+                      htmlFor="discountedPrice"
                       id="discountedPrice"
-                      onChange={handleMutate}
-                      value={discountedPrice}
-                      min="50"
-                      max="7500000000"
-                      className="w-20 grow font-semibold"
-                      required
-                    />
-                    <p className="font-semibold">$</p>
-                    {type === 'rent' && (
-                      <p className="font-semibold"> / Month</p>
-                    )}
-                  </label>
+                      className="input input-bordered flex items-center gap-2"
+                    >
+                      <input
+                        type="number"
+                        id="discountedPrice"
+                        onChange={handleMutate}
+                        value={discountedPrice}
+                        min="50"
+                        max="7500000000"
+                        className="w-20 grow font-semibold"
+                        required
+                      />
+                      <p className="font-semibold">$</p>
+                      {type === 'rent' && (
+                        <p className="font-semibold"> / Month</p>
+                      )}
+                    </label>
+                  </div>
                 </div>
-              </div>
+                <div className="divider" />
+              </>
             )}
-            <div className="divider" />
             <div className="flex flex-col space-y-2">
               <p className="text-lg font-semibold">Images</p>
               <p>The first image will be the cover (max 6).</p>
