@@ -1,5 +1,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { useState, useEffect, useRef, FormEvent } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  FormEvent,
+  ChangeEvent,
+  MouseEventHandler,
+} from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { firebaseApp } from '../../firebase.config';
@@ -21,7 +28,7 @@ function CreateListing() {
     offer: true,
     regularPrice: 0,
     discountedPrice: 0,
-    imagesUrls: {},
+    imagesUrls: FileList,
     latitude: 0,
     longitude: 0,
   });
@@ -66,9 +73,36 @@ function CreateListing() {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(formData);
   };
 
-  const handleMutate = () => {};
+  const handleMutate = (e) => {
+    let boolean: null | boolean = null;
+
+    if (e.target.value === 'true') {
+      boolean = true;
+    }
+
+    if (e.target.value === 'false') {
+      boolean = false;
+    }
+
+    // Files
+    if (e.target.files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        imagesUrls: e.target.files,
+      }));
+    }
+
+    // Text/Booleans/Numbers
+    if (!e.target.files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [e.target.id]: boolean ?? e.target.value,
+      }));
+    }
+  };
 
   return (
     <div className="container mx-auto min-h-screen p-4">
@@ -174,7 +208,7 @@ function CreateListing() {
                   <button
                     type="button"
                     id="parking"
-                    value={true}
+                    value="true"
                     onClick={handleMutate}
                     className={`${parking ? 'btn-primary' : ''} btn btn-wide`}
                   >
@@ -183,7 +217,7 @@ function CreateListing() {
                   <button
                     type="button"
                     id="parking"
-                    value={false}
+                    value="false"
                     onClick={handleMutate}
                     className={`${
                       !parking && parking !== null ? 'btn-primary' : ''
@@ -202,7 +236,7 @@ function CreateListing() {
                   <button
                     type="button"
                     id="furnished"
-                    value={true}
+                    value="true"
                     onClick={handleMutate}
                     className={`${furnished ? 'btn-primary' : ''} btn btn-wide`}
                   >
@@ -211,7 +245,7 @@ function CreateListing() {
                   <button
                     type="button"
                     id="furnished"
-                    value={false}
+                    value="false"
                     onClick={handleMutate}
                     className={`${
                       !furnished && furnished !== null ? 'btn-primary' : ''
@@ -225,12 +259,13 @@ function CreateListing() {
             <div className="divider" />
             <div className="flex flex-col">
               <p className="text-lg font-semibold">Address</p>
-              <label htmlFor="location" id="location" />
+              <label htmlFor="location" />
               <textarea
                 name="location"
                 id="location"
                 value={location}
-                className="grow rounded-md border-2 font-semibold"
+                onChange={handleMutate}
+                className="grow rounded-md border-2 p-2 font-semibold"
                 cols={30}
                 rows={10}
               />
@@ -277,7 +312,7 @@ function CreateListing() {
                   <button
                     type="button"
                     id="offer"
-                    value={true}
+                    value="true"
                     onClick={handleMutate}
                     className={`${offer ? 'btn-primary' : ''} btn btn-wide`}
                   >
@@ -286,7 +321,7 @@ function CreateListing() {
                   <button
                     type="button"
                     id="offer"
-                    value={false}
+                    value="false"
                     onClick={handleMutate}
                     className={`${
                       !offer && offer !== null ? 'btn-primary' : ''
@@ -309,8 +344,8 @@ function CreateListing() {
                   <input
                     type="number"
                     id="regularPrice"
-                    onChange={handleMutate}
                     value={regularPrice}
+                    onChange={handleMutate}
                     min="50"
                     max="7500000000"
                     className="w-20 grow font-semibold"
@@ -357,6 +392,7 @@ function CreateListing() {
               <input
                 type="file"
                 id="imagesUrls"
+                onChange={handleMutate}
                 name="imagesUrls"
                 max={6}
                 accept=".jpg,.png,.jpeg"

@@ -10,7 +10,7 @@ export type SingleListingType = {
   offer: boolean;
   regularPrice: number;
   discountedPrice: number;
-  imagesUrls: object;
+  imagesUrls: FileList;
   latitude: number;
   longitude: number;
 };
