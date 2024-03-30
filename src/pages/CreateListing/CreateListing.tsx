@@ -1,13 +1,26 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { useState, useEffect, useRef, FormEvent } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import { useState, useEffect, useRef, ChangeEvent, useContext } from 'react';
+import AppContext from '../../context/AppContext';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from 'firebase/storage';
+import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
-import { firebaseApp } from '../../firebase.config';
-import { SingleListingType } from './SingleListing.types';
 import { toast } from 'react-toastify';
+import db, { firebaseApp } from '../../firebase.config';
+import { SingleListingType } from './SingleListing.types';
 import Spinner from '../../components/Spinner';
 
 function CreateListing() {
+  const apiKey = import.meta.env.VITE_APP_GEOCODE_API_KEY;
+  const apiUrl = import.meta.env.VITE_APP_GEOCODE_API_URL;
+  const { theme } = useContext(AppContext);
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<SingleListingType>({
@@ -22,7 +35,16 @@ function CreateListing() {
     offer: true,
     regularPrice: 0,
     discountedPrice: 0,
-    imagesUrls: FileList,
+    imagesUrls: {
+      length: 0,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      item(_index: number): File | null {
+        throw new Error('Function not implemented.');
+      },
+      [Symbol.iterator](): IterableIterator<File> {
+        throw new Error('Function not implemented.');
+      },
+    },
     latitude: 0,
     longitude: 0,
   });
@@ -62,7 +84,6 @@ function CreateListing() {
     return () => {
       isMounted.current = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMounted]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -88,9 +109,7 @@ function CreateListing() {
     let location = '';
 
     if (geolocationEnabled) {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}`
-      );
+      const response = await fetch(`${apiUrl}${address}${apiKey}`);
 
       const data = await response.json();
       geolocation.lat = data.results[0]?.geometry.location.lat ?? 0;
@@ -111,10 +130,64 @@ function CreateListing() {
       location = address;
     }
 
+    // Store images in Firebase
+    const storeImage = async (image) => {
+      return new Promise((resolve, reject) => {
+        const storage = getStorage(firebaseApp);
+        const fileName = `${auth.currentUser!.uid}-${image.name}-${uuidv4()}`;
+
+        const storageRef = ref(storage, `images/${fileName}`);
+
+        const uploadTask = uploadBytesResumable(storageRef, image);
+
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const transferProgress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused');
+                break;
+              case 'running':
+                console.log('Upload is running');
+                break;
+              default:
+                console.log('OK');
+            }
+          },
+          (error) => {
+            reject(error); // Rejecting the promise in case of an error
+          },
+          () => {
+            // Resolving the promise with the download URL when upload is complete
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              resolve(downloadURL);
+            });
+          }
+        );
+      });
+    };
+
+    // Store images in Firebase
+    const imgUrls = await Promise.all(
+      [...imagesUrls].map((image) => storeImage(image))
+    ).catch(() => {
+      setIsLoading(false);
+      toast.error('Images not uploaded');
+    });
+
     setIsLoading(false);
   };
 
-  const handleMutate = (e) => {
+  type FormEvent =
+    | MouseEvent<HTMLButtonElement>
+    | ChangeEvent<HTMLInputElement>
+    | ChangeEvent<HTMLTextAreaElement>
+    | ChangeEvent<HTMLInputElement & { files: FileList }>;
+
+  const handleMutate = (e: FormEvent) => {
     let boolean: null | boolean = null;
 
     if (e.target.value === 'true') {
@@ -143,14 +216,21 @@ function CreateListing() {
   };
 
   return (
-    <div className="container mx-auto min-h-screen p-4">
-      <h1 className="text-4xl font-semibold">Create a Listing</h1>
+    <div className="mx-auto min-h-screen max-w-3xl p-4">
       {isLoading ? (
         <Spinner />
       ) : (
         <header>
-          <form onSubmit={handleSubmit} className="rounded-md p-4 shadow-md">
-            <div className="flex flex-col">
+          <h1 className="text-center text-3xl font-semibold md:text-left md:text-4xl">
+            Create A Listing
+          </h1>
+          <form
+            onSubmit={handleSubmit}
+            className={`${
+              theme === 'dark' ? 'shadow-sm shadow-primary' : 'shadow-2xl'
+            } mx-auto my-4 rounded-md p-4 `}
+          >
+            <div className="flex flex-col space-y-4">
               <p className="text-lg font-semibold">Sell / Rent</p>
               <label id="type">
                 <div className="space-x-2">
@@ -161,7 +241,7 @@ function CreateListing() {
                     onClick={handleMutate}
                     className={`${
                       type === 'sale' ? 'btn-primary' : ''
-                    } btn btn-wide`}
+                    } btn w-36 md:btn-wide`}
                   >
                     Sell
                   </button>
@@ -172,7 +252,7 @@ function CreateListing() {
                     onClick={handleMutate}
                     className={`${
                       type === 'rent' ? 'btn-primary' : ''
-                    } btn btn-wide`}
+                    } btn w-36 md:btn-wide`}
                   >
                     Rent
                   </button>
@@ -180,7 +260,7 @@ function CreateListing() {
               </label>
             </div>
             <div className="divider" />
-            <div className="flex flex-col">
+            <div className="flex flex-col space-y-4">
               <p className="text-lg font-semibold">Name</p>
               <label
                 htmlFor="name"
@@ -199,7 +279,7 @@ function CreateListing() {
             </div>
             <div className="divider" />
             <div className="flex space-x-6">
-              <div className="flex flex-col">
+              <div className="flex flex-col space-y-4">
                 <p className="text-lg font-semibold">Bedrooms</p>
                 <label
                   htmlFor="bedrooms"
@@ -218,7 +298,7 @@ function CreateListing() {
                   />
                 </label>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col space-y-4">
                 <p className="text-lg font-semibold">Bathrooms</p>
                 <label
                   htmlFor="bathrooms"
@@ -239,7 +319,7 @@ function CreateListing() {
               </div>
             </div>
             <div className="divider" />
-            <div className="flex flex-col">
+            <div className="flex flex-col space-y-4">
               <p className="text-lg font-semibold">Parking Spot</p>
               <label id="parking">
                 <div className="space-x-2">
@@ -248,7 +328,9 @@ function CreateListing() {
                     id="parking"
                     value="true"
                     onClick={handleMutate}
-                    className={`${parking ? 'btn-primary' : ''} btn btn-wide`}
+                    className={`${
+                      parking ? 'btn-primary' : ''
+                    } btn w-36 md:btn-wide`}
                   >
                     Yes
                   </button>
@@ -259,7 +341,7 @@ function CreateListing() {
                     onClick={handleMutate}
                     className={`${
                       !parking && parking !== null ? 'btn-primary' : ''
-                    } btn btn-wide`}
+                    } btn w-36 md:btn-wide`}
                   >
                     No
                   </button>
@@ -267,7 +349,7 @@ function CreateListing() {
               </label>
             </div>
             <div className="divider" />
-            <div className="flex flex-col">
+            <div className="flex flex-col space-y-4">
               <p className="text-lg font-semibold">Furnished</p>
               <label id="furnished">
                 <div className="space-x-2">
@@ -276,7 +358,9 @@ function CreateListing() {
                     id="furnished"
                     value="true"
                     onClick={handleMutate}
-                    className={`${furnished ? 'btn-primary' : ''} btn btn-wide`}
+                    className={`${
+                      furnished ? 'btn-primary' : ''
+                    } btn w-36 md:btn-wide`}
                   >
                     Yes
                   </button>
@@ -287,7 +371,7 @@ function CreateListing() {
                     onClick={handleMutate}
                     className={`${
                       !furnished && furnished !== null ? 'btn-primary' : ''
-                    } btn btn-wide`}
+                    } btn w-36 md:btn-wide`}
                   >
                     No
                   </button>
@@ -295,7 +379,7 @@ function CreateListing() {
               </label>
             </div>
             <div className="divider" />
-            <div className="flex flex-col">
+            <div className="flex flex-col space-y-4">
               <p className="text-lg font-semibold">Address</p>
               <label htmlFor="address" />
               <textarea
@@ -303,12 +387,12 @@ function CreateListing() {
                 id="address"
                 value={address}
                 onChange={handleMutate}
-                className="grow rounded-md border-2 p-2 font-semibold"
+                className="grow rounded-md border-2 bg-base-100 p-2 font-semibold"
                 cols={30}
-                rows={10}
+                rows={3}
               />
               {!geolocationEnabled && (
-                <div className="flex flex-col space-y-2">
+                <div className="flex flex-col space-y-4">
                   <p className="text-lg font-semibold">Latitude</p>
                   <label
                     htmlFor="latitude"
@@ -343,7 +427,7 @@ function CreateListing() {
               )}
             </div>
             <div className="divider" />
-            <div className="flex flex-col">
+            <div className="flex flex-col space-y-4">
               <p className="text-lg font-semibold">Offer</p>
               <label id="offer">
                 <div className="space-x-2">
@@ -352,7 +436,9 @@ function CreateListing() {
                     id="offer"
                     value="true"
                     onClick={handleMutate}
-                    className={`${offer ? 'btn-primary' : ''} btn btn-wide`}
+                    className={`${
+                      offer ? 'btn-primary' : ''
+                    } btn w-36 md:btn-wide`}
                   >
                     Yes
                   </button>
@@ -363,7 +449,7 @@ function CreateListing() {
                     onClick={handleMutate}
                     className={`${
                       !offer && offer !== null ? 'btn-primary' : ''
-                    } btn btn-wide`}
+                    } btn w-36 md:btn-wide`}
                   >
                     No
                   </button>
@@ -372,7 +458,7 @@ function CreateListing() {
             </div>
             <div className="divider" />
             <div className="flex space-x-6">
-              <div className="flex flex-col">
+              <div className="flex flex-col space-y-4">
                 <p className="text-lg font-semibold">Regular Price</p>
                 <label
                   htmlFor="regularPrice"
@@ -398,7 +484,7 @@ function CreateListing() {
             {offer && (
               <>
                 <div className="flex space-x-6">
-                  <div className="flex flex-col">
+                  <div className="flex flex-col space-y-4">
                     <p className="text-lg font-semibold">Discounted Price</p>
                     <label
                       htmlFor="discountedPrice"
@@ -437,7 +523,7 @@ function CreateListing() {
                 max={6}
                 accept=".jpg,.png,.jpeg"
                 multiple
-                className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+                className="file-input file-input-bordered file-input-primary w-full"
                 required
               />
             </div>
