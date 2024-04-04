@@ -2,7 +2,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { useState, useEffect, useRef, ChangeEvent, useContext } from 'react';
-import AppContext from '../../context/AppContext';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
   getStorage,
@@ -13,6 +12,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import AppContext from '../../context/AppContext';
 import db, { firebaseApp } from '../../firebase.config';
 import { SingleListingType } from './SingleListing.types';
 import Spinner from '../../components/Spinner';
