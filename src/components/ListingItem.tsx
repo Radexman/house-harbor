@@ -26,7 +26,7 @@ function ListingItem({ listing, id }: ListingOnePropTypes) {
           <img
             src={listing.imagesUrls[0]}
             alt={`${listing.name} house`}
-            className="h-auto w-full rounded-md sm:h-32 sm:min-w-52"
+            className="h-auto w-full rounded-md sm:h-32 sm:w-60"
           />
         </div>
         <div>
