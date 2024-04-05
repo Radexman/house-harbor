@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { FaShareAlt as ShareIcon } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 import { ListingType } from '../../types/Listing.type';
 import db, { firebaseApp } from '../../firebase.config';
 import Spinner from '../../components/Spinner';
 
 function Listing() {
-  const [listing, setListing] = useState(null); // Initialize with null
+  const [listing, setListing] = useState<ListingType>({
+    data: {},
+    id: '',
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
 
@@ -23,15 +27,20 @@ function Listing() {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          console.log(docSnap.data());
-          setListing(docSnap.data()); // Set listing state
+          setListing((prevState) => ({
+            ...prevState,
+            data: {
+              ...prevState.data,
+              ...docSnap.data(),
+            },
+          }));
         } else {
-          console.log('No such document!');
+          toast.error('No such document!');
         }
       } catch (error) {
-        console.error('Error fetching document: ', error);
+        toast.error(`Error fetching document: , ${error}`);
       } finally {
-        setIsLoading(false); // Set loading to false regardless of success or failure
+        setIsLoading(false);
       }
     };
 
@@ -39,18 +48,92 @@ function Listing() {
   }, [navigate, params.listingId]);
 
   if (isLoading) {
-    return <Spinner />; // Show spinner while loading
+    return <Spinner />;
   }
 
   if (!listing) {
-    return <div>No data found</div>; // Handle case where listing is null
+    return <div>No data found</div>;
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1>Single Listing</h1>
-      {/* Render listing data here */}
-    </div>
+    <main className="container mx-auto p-4">
+      {/* SLIDER */}
+      <div className="flex justify-between pt-4">
+        <h1 className="text-3xl font-semibold">{listing.data.name}</h1>
+        <button
+          type="button"
+          className="btn tooltip tooltip-bottom rounded-full"
+          data-tip="Share Listing"
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href);
+            setShareLinkCopied(true);
+
+            setTimeout(() => {
+              setShareLinkCopied(false);
+            }, 2000);
+          }}
+        >
+          <ShareIcon />
+        </button>
+      </div>
+      <div className="flex justify-between">
+        <div />
+        {shareLinkCopied && <p className="-mr-4 text-sm">Link Copied</p>}
+      </div>
+      <p className="text-xl font-semibold">{listing.data.location}</p>
+      <div className="flex items-center gap-2">
+        <p className="text-xl font-semibold">
+          $
+          {listing.data.offer
+            ? listing.data.discountedPrice
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            : listing.data.regularPrice
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+        </p>
+        <div className="badge badge-primary">
+          For {listing.data.type === 'rent' ? 'Rent' : 'Sale'}
+        </div>
+        {listing.data.offer && (
+          <div className="badge badge-secondary badge-outline">
+            ${listing.data.regularPrice - listing.data.discountedPrice} discount
+          </div>
+        )}
+      </div>
+      <div className="my-6">
+        <h2 className="text-xl font-semibold">Home Equipment</h2>
+        <ul className="my-2 space-y-1 text-sm font-semibold">
+          <li>
+            {listing.data.bedrooms > 1
+              ? `${listing.data.bedrooms} Bedrooms`
+              : '1 Bedroom'}
+          </li>
+          <li>
+            {listing.data.bathrooms > 1
+              ? `${listing.data.bathrooms} Bathrooms`
+              : '1 Bathroom'}
+          </li>
+          <li>{listing.data.parking && 'Parking Spot'}</li>
+          <li>{listing.data.furnished && 'Furnished'}</li>
+        </ul>
+      </div>
+      <div className="my-6">
+        <h2 className="text-xl font-semibold">Location</h2>
+        {/* Map */}
+      </div>
+      <div className="my-6">
+        {auth.currentUser?.uid !== listing.data.userRef && (
+          <button type="button" className="btn btn-primary">
+            <Link
+              to={`/contact/${listing.data.userRef}?listingName=${listing.data.name}&listingLocation=${listing.data.location}`}
+            >
+              Contact Landlord
+            </Link>
+          </button>
+        )}
+      </div>
+    </main>
   );
 }
 
