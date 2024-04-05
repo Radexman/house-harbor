@@ -17,6 +17,7 @@ import Profile from './pages/Profile/Profile';
 import PrivateRoute from './components/PrivateRoute';
 import CreateListing from './pages/CreateListing/CreateListing';
 import Listing from './pages/Listing/Listing';
+import Contact from './pages/Contact/Contact';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           path="/category/:categoryName/:listingId"
           element={<Listing />}
         />
+        <Route path="/contact/:landlordId" element={<Contact />} />
         <Route path="/notfound" element={<NotFound />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -19,5 +19,3 @@ export type ListingType = {
   };
   id: string;
 };
-
-// xaURP89qDLW1TUDzU0cvifdYgWs1;

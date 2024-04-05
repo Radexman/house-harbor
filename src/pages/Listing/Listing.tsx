@@ -1,16 +1,32 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, Timestamp, GeoPoint } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { FaShareAlt as ShareIcon } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { ListingType } from '../../types/Listing.type';
+
 import db, { firebaseApp } from '../../firebase.config';
 import Spinner from '../../components/Spinner';
 
 function Listing() {
   const [listing, setListing] = useState<ListingType>({
-    data: {},
+    data: {
+      bathrooms: 0,
+      bedrooms: 0,
+      discountedPrice: 0,
+      furnished: false,
+      geolocation: new GeoPoint(0, 0),
+      imagesUrls: [],
+      location: '',
+      name: '',
+      offer: false,
+      parking: false,
+      regularPrice: 0,
+      timestamp: new Timestamp(0, 0),
+      type: '',
+      userRef: '',
+    },
     id: '',
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -23,19 +39,21 @@ function Listing() {
   useEffect(() => {
     const fetchListing = async () => {
       try {
-        const docRef = doc(db, 'listings', params.listingId);
-        const docSnap = await getDoc(docRef);
+        if (params.listingId) {
+          const docRef = doc(db, 'listings', params.listingId);
+          const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-          setListing((prevState) => ({
-            ...prevState,
-            data: {
-              ...prevState.data,
-              ...docSnap.data(),
-            },
-          }));
-        } else {
-          toast.error('No such document!');
+          if (docSnap.exists()) {
+            setListing((prevState) => ({
+              ...prevState,
+              data: {
+                ...prevState.data,
+                ...docSnap.data(),
+              },
+            }));
+          } else {
+            toast.error('No such document!');
+          }
         }
       } catch (error) {
         toast.error(`Error fetching document: , ${error}`);
@@ -126,7 +144,7 @@ function Listing() {
         {auth.currentUser?.uid !== listing.data.userRef && (
           <button type="button" className="btn btn-primary">
             <Link
-              to={`/contact/${listing.data.userRef}?listingName=${listing.data.name}&listingLocation=${listing.data.location}`}
+              to={`/contact/${listing.data.userRef}?listingName=${listing.data.name}`}
             >
               Contact Landlord
             </Link>
