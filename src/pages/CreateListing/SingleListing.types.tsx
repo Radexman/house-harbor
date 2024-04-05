@@ -6,7 +6,7 @@ export type SingleListingType = {
   bathrooms: number;
   parking: boolean;
   furnished: boolean;
-  address: string;
+  location: string;
   offer: boolean;
   regularPrice: number;
   discountedPrice: number;

@@ -1,14 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { useState, useEffect, useRef, ChangeEvent, useContext } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from 'firebase/storage';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -171,12 +173,30 @@ function CreateListing() {
     };
 
     // Store images in Firebase
-    const imgUrls = await Promise.all(
-      [...imagesUrls].map((image) => storeImage(image))
-    ).catch(() => {
-      setIsLoading(false);
-      toast.error('Images not uploaded');
-    });
+    const imageUrls: string[] = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const image of imagesUrls) {
+      // Assuming `image` is a File object
+      // eslint-disable-next-line no-await-in-loop
+      const downloadUrl = await storeImage(image);
+      imageUrls.push(downloadUrl);
+    }
+
+    // Update formData with the extracted image URLs
+    const formDataCopy = {
+      ...formData,
+      imagesUrls: imageUrls, // Update imagesUrls with array of download URLs
+      geolocation,
+      timestamp: serverTimestamp(),
+    };
+
+    delete formDataCopy.address;
+    location && (formDataCopy.location = location);
+    !formDataCopy.offer && delete formDataCopy.discountedPrice;
+
+    const docRef = await addDoc(collection(db, 'listings'), formDataCopy);
+    toast.success('Listing saved');
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
 
     setIsLoading(false);
   };
